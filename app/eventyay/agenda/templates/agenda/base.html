@@ -1,0 +1,52 @@
+{% extends "common/base_public.html" %}
+
+{% load event_tags %}
+{% load staff_session %}
+{% load i18n %}
+{% load rules %}
+{% load safelink %}
+
+{% load presale_locale %}
+{% block custom_header %}
+    {% block alternate_link %}
+        <link rel="alternate" type="application/atom+xml" title="{{ request.event.name|event_localize }} Schedule Versions" href="{{ request.event.urls.feed }}" />
+        <link rel="alternate" type="application/json" title="{{ request.event.name|event_localize }} API" href="{{ request.event.api_urls.base.full }}" />
+    {% endblock alternate_link %}
+    {% block agenda_custom_header %}{% endblock agenda_custom_header %}
+{% endblock custom_header %}
+
+{% block nav_link %}
+    {% has_event_perm "base.list_schedule" request.user request request.event as can_view_schedule %}
+    {% if can_view_schedule %}
+        {{ request.event.urls.schedule }}
+    {% else %}
+        {{ request.event.urls.base }}
+    {% endif %}
+{% endblock nav_link %}
+
+{% block header_tabs %}
+    {% include "common/fragment_nav.html" with nav_context="agenda" %}
+{% endblock header_tabs %}
+
+{% block alerts %}
+    {{ block.super }}
+    {% if request.event.settings.talks_testmode %}
+        <div class="alert alert-warning alert-margin">
+            <strong>
+                {% trans "Talk pages are currently in test mode. Please do not treat schedules or submissions as final, as they may change or be removed without notice." %}
+            </strong>
+        </div>
+    {% endif %}
+{% endblock alerts %}
+
+{% block content %}
+    {% if not request.event|get_feature_flag:"show_schedule" and not request.user.is_anonymous and not hide_visibility_warning %}
+        <div id="event-nonpublic" class="d-print-none">
+            <i class="fa fa-user-secret"></i>
+            {% blocktranslate trimmed %}
+                This schedule-related page is non-public. Only organisers can see it.
+            {% endblocktranslate %}
+        </div>
+    {% endif %}
+    {% block agenda_content %}{% endblock agenda_content %}
+{% endblock content %}

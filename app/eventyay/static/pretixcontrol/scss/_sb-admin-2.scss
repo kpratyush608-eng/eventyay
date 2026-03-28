@@ -1,0 +1,613 @@
+/*
+Based on https://github.com/BlackrockDigital/startbootstrap-sb-admin-2
+Copyright 2013-2016 Blackrock Digital LLC
+MIT License
+Modified by Raphael Michel
+*/
+// Global Styles
+
+body {
+    background-color: $gray-lightest;
+}
+
+// Wrappers
+
+#wrapper {
+    width: 100%;
+}
+
+#page-wrapper {
+    padding: 0 15px;
+    min-height: 568px;
+    background-color: white;
+}
+
+@media(min-width:768px) {
+    #page-wrapper {
+        position: inherit;
+        margin: 0 0 0 $sidebar-width;
+        padding: 0 30px;
+        border-left: 1px solid darken($gray-lightest, 6.5%);
+    }
+}
+
+// Navigation
+
+// --Topbar
+
+.navbar-top-links {
+    display: flex;
+    align-items: center;
+    margin-right: 0;
+}
+
+.navbar-top-links li {
+    display: inline-block;
+}
+
+.navbar-top-links li:last-child {
+    margin-right: 15px;
+}
+
+.navbar-top-links li a {
+    padding: 15px;
+    min-height: 50px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.navbar-top-links .dropdown-menu li {
+    display: block;
+}
+
+.navbar-top-links .dropdown-menu li:last-child {
+    margin-right: 0;
+}
+
+.navbar-top-links .dropdown-menu li a {
+    padding: 3px 20px;
+    min-height: 0;
+}
+
+.navbar-top-links .dropdown-menu li a div {
+    white-space: normal;
+}
+
+.navbar-top-links .dropdown-messages,
+.navbar-top-links .dropdown-tasks,
+.navbar-top-links .dropdown-alerts {
+    width: 310px;
+    min-width: 0;
+}
+
+.navbar-top-links .dropdown-messages {
+    margin-left: 5px;
+}
+
+.navbar-top-links .dropdown-tasks {
+    margin-left: -59px;
+}
+
+.navbar-top-links .dropdown-alerts {
+    margin-left: -123px;
+}
+
+.navbar-top-links .dropdown-user {
+    right: 0;
+    left: auto;
+}
+
+.navbar-top-links .language-switch {
+  display: flex;
+  align-items: center;
+  position: relative; // for consistent stacking
+
+  .language-form {
+    position: relative;
+  }
+
+  details.dropdown.locales {
+    position: relative;
+
+    summary.language-summary {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+
+      padding: 10px;
+      margin-right: 20px;
+
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+
+      &::marker,
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      .current-locale {
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      i {
+        color: #fff;
+      }
+    }
+
+    &[open] .dropdown-content {
+      animation: dropdown 0.2s ease-in-out;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      margin-top: 6px;
+
+      min-width: 160px;
+      max-width: 400px;
+      max-height: 400px;
+
+      padding: 0;
+      list-style: none;
+
+      background: #fff;
+      border: 1px solid rgba(27, 31, 35, 0.15);
+      border-radius: 0.25rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      z-index: 2000;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
+      &::before,
+      &::after {
+        position: absolute;
+        display: inline-block;
+        content: " ";
+      }
+
+      &::before {
+        top: -16px;
+        border: 8px solid transparent;
+        border-bottom-color: rgba(27, 31, 35, 0.15);
+      }
+
+      &::after {
+        top: -14px;
+        border: 7px solid transparent;
+        border-bottom-color: #fff;
+      }
+
+      .dropdown-item {
+        display: block;
+        width: 100%;
+
+        padding: 5px 16px;
+        border: 0;
+        background: transparent;
+
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        color: #333;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        &.active {
+          background-color: $brand-primary;
+          color: #fff;
+        }
+
+        &:first-child {
+          border-top-left-radius: 0.25rem;
+          border-top-right-radius: 0.25rem;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 0.25rem;
+          border-bottom-right-radius: 0.25rem;
+        }
+      }
+    }
+
+    // Positioning variants (keep the same convention you already use)
+    .dropdown-content-s {
+      right: 50%;
+      left: auto;
+      transform: translateX(50%);
+
+      &::before,
+      &::after {
+        right: 50%;
+        transform: translateX(50%);
+      }
+    }
+
+    .dropdown-content-sw {
+      right: 0;
+      left: auto;
+
+      &::before { right: 9px; }
+      &::after  { right: 10px; }
+    }
+
+    .dropdown-content-se {
+      left: 0;
+      right: auto;
+
+      &::before { left: 9px; }
+      &::after  { left: 10px; }
+    }
+  }
+}
+
+@keyframes dropdown {
+  0% { opacity: 0; transform: translateY(-2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+// --Sidebar
+
+.sidebar {
+    .sidebar-nav.navbar-collapse {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.sidebar .sidebar-search {
+    padding: 15px;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid darken($gray-lightest, 6.5%);
+    position: relative;
+    a {
+        &.active {
+            background-color: $gray-lighter;
+        }
+    }
+    a.arrow {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: block;
+    }
+    a.has-children {
+        margin-right: 40px;
+    }
+}
+
+.sidebar .fa.arrow {
+    line-height: 19px !important;
+    width: 10px;
+    text-align: center;
+}
+
+.sidebar .fa.arrow:before {
+    content: "\f104";
+}
+
+.sidebar .active > a > .fa.arrow:before {
+    content: "\f107";
+}
+
+.sidebar .nav-second-level li,
+.sidebar .nav-third-level li {
+    border-bottom: none !important;
+}
+
+.sidebar .nav-second-level li a {
+    padding-left: 37px;
+}
+
+.sidebar .nav-third-level li a {
+    padding-left: 52px;
+}
+
+.sidebar .context-selector {
+    .dropdown-toggle {
+        padding: 10px 20px 9px 7px;
+        display: block;
+        text-decoration: none;
+        position: relative;
+
+        span.caret {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            margin-top: -2px;
+        }
+        .context-icon {
+            width: 2.5em;
+            height: 2.5em;
+            line-height: 2.5em;
+        }
+        .context-icon .fa-circle {
+            font-size: 2em;
+        }
+        .context-icon .fa-dashboard, .context-icon .fa-group {
+            font-size: 1em;
+            // Ensure visibility
+            visibility: visible;
+            opacity: 1;
+        }
+    }
+    border-bottom: 1px solid darken($gray-lightest, 6.5%);
+
+    .context-indicator {
+        display: inline-block;
+        padding-left: 5px;
+        padding-right: 2px;
+        vertical-align: middle;
+        span {
+            display: block;
+            width: 170px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            line-height: 17px;
+        }
+        span.context-name {
+            font-weight: 600;
+            vertical-align: middle;
+            font-size: 15px;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+        span.context-meta {
+            font-size: 11px;
+            color: $body-color-light;
+            font-weight: normal;
+        }
+    }
+}
+
+@media(min-width:768px) {
+    .sidebar {
+        z-index: 1;
+        position: fixed;
+        width: $sidebar-width;
+        margin-top: 51px;
+        top: 0;
+        bottom: 0;
+        height: calc(100vh - 50px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        overscroll-behavior: contain;
+        contain: strict;
+    }
+
+    .navbar-top-links .dropdown-messages,
+    .navbar-top-links .dropdown-tasks,
+    .navbar-top-links .dropdown-alerts {
+        margin-left: auto;
+    }
+}
+
+// Buttons
+
+.btn-outline {
+    color: inherit;
+    background-color: transparent;
+    transition: all .5s;
+}
+
+.btn-primary.btn-outline {
+    color: $brand-primary;
+}
+
+.btn-success.btn-outline {
+    color: $brand-success;
+}
+
+.btn-info.btn-outline {
+    color: $brand-info;
+}
+
+.btn-warning.btn-outline {
+    color: $brand-warning;
+}
+
+.btn-danger.btn-outline {
+    color: $brand-danger;
+}
+
+.btn-primary.btn-outline:hover,
+.btn-success.btn-outline:hover,
+.btn-info.btn-outline:hover,
+.btn-warning.btn-outline:hover,
+.btn-danger.btn-outline:hover {
+    color: white;
+}
+
+// Chat Widget
+
+.chat {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted $gray-light;
+}
+
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body {
+    margin-right: 60px;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+}
+
+.panel .slidedown .glyphicon,
+.chat .glyphicon {
+    margin-right: 5px;
+}
+
+.chat-panel .panel-body {
+    height: 350px;
+    overflow-y: scroll;
+}
+
+// Login Page
+
+.login-panel {
+    margin-top: 25%;
+}
+
+// Flot Charts Containers
+
+.flot-chart {
+    display: block;
+    height: 400px;
+}
+
+.flot-chart-content {
+    width: 100%;
+    height: 100%;
+}
+
+// DataTables Overrides
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled {
+    background: transparent;
+}
+
+table.dataTable thead .sorting_asc:after {
+    content: "\f0de";
+    float: right;
+    font-family: fontawesome;
+}
+
+table.dataTable thead .sorting_desc:after {
+    content: "\f0dd";
+    float: right;
+    font-family: fontawesome;
+}
+
+table.dataTable thead .sorting:after {
+    content: "\f0dc";
+    float: right;
+    font-family: fontawesome;
+    color: rgba(50,50,50,.5);
+}
+
+// Circle Buttons
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.428571429;
+}
+
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    border-radius: 25px;
+    font-size: 18px;
+    line-height: 1.33;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+// Grid Demo Elements
+
+.show-grid [class^="col-"] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #ddd;
+    background-color: #eee !important;
+}
+
+.show-grid {
+    margin: 15px 0;
+}
+
+// Custom Colored Panels
+
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: $brand-success;
+    .panel-heading {
+        border-color: $brand-success;
+        color: white;
+        background-color: $brand-success;
+    }
+    a {
+        color: $brand-success;
+        &:hover {
+            color: darken($brand-success, 15%);
+        }
+    }
+}
+
+.panel-red {
+    border-color: $brand-danger;
+    .panel-heading {
+        border-color: $brand-danger;
+        color: white;
+        background-color: $brand-danger;
+    }
+    a {
+        color: $brand-danger;
+        &:hover {
+            color: darken($brand-danger, 15%);
+        }
+    }
+}
+
+.panel-yellow {
+    border-color: $brand-warning;
+    .panel-heading {
+        border-color: $brand-warning;
+        color: white;
+        background-color: $brand-warning;
+    }
+    a {
+        color: $brand-warning;
+        &:hover {
+            color: darken($brand-warning, 15%);
+        }
+    }
+}
+
+// Utility class for sharp corners (matching talk component)
+.btn.btn-sharp,
+a.btn.btn-sharp {
+    border-radius: 0;
+}

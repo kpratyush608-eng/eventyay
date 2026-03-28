@@ -1,0 +1,69 @@
+name: eventyay-next
+
+services:
+  web:
+    build: ./app
+    platform: linux/amd64
+    container_name: eventyay-next-web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app/eventyay:/usr/src/app/eventyay
+      - /usr/src/app/eventyay/static.dist
+      - /usr/src/app/eventyay/static/video
+      - /usr/src/app/eventyay/static/schedule-editor
+      - /usr/src/app/eventyay/webapp/video/node_modules
+      - /usr/src/app/eventyay/webapp/schedule-editor/node_modules
+      - /usr/src/app/eventyay/webapp/schedule/node_modules
+      - /usr/src/app/eventyay/webapp/webcheckin/node_modules
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    build: ./app
+    platform: linux/amd64
+    container_name: eventyay-next-worker
+    entrypoint: celery -A eventyay worker -l info
+    volumes:
+      - ./app/eventyay:/usr/src/app/eventyay
+      - /usr/src/app/eventyay/static.dist
+      - /usr/src/app/eventyay/static/video
+      - /usr/src/app/eventyay/static/schedule-editor
+      - /usr/src/app/eventyay/webapp/video/node_modules
+      - /usr/src/app/eventyay/webapp/schedule-editor/node_modules
+      - /usr/src/app/eventyay/webapp/schedule/node_modules
+      - /usr/src/app/eventyay/webapp/webcheckin/node_modules
+    env_file:
+      - ./.env.dev
+    environment:
+      - MPLCONFIGDIR=/tmp/matplotlib
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis:latest
+    platform: linux/amd64
+    container_name: eventyay-next-redis
+    restart: unless-stopped
+    volumes:
+      - rd:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  db:
+    image: postgres:15
+    platform: linux/amd64
+    container_name: eventyay-next-db
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev
+
+volumes:
+  postgres_data_dev:
+  rd:

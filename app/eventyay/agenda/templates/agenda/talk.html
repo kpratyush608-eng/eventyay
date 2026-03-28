@@ -1,0 +1,38 @@
+{% extends "agenda/base.html" %}
+
+{% load event_tags %}
+{% load html_signal %}
+
+{% load presale_locale %}
+{% block title %}{{ submission.title|event_localize }} ::{% endblock title %}
+{% block meta_title %}{{ submission.title|event_localize }}{% endblock meta_title %}
+{% block social_title %}{{ submission.title|event_localize }}{% endblock social_title %}
+{% block meta_description %}{{ submission_description|event_localize }}{% endblock meta_description %}
+{% block social_description %}{{ submission_description|event_localize }}{% endblock social_description %}
+{% block meta_image %}
+    <meta property="thumbnail" content="{{ submission.urls.social_image.full }}">
+    <meta property="og:image" content="{{ submission.urls.social_image.full }}">
+{% endblock meta_image %}
+{% block alternate_link %}
+    <link rel="alternate" type="application/json" title="{{ request.event.name|event_localize }} API" href="{{ request.event.api_urls.talks.full }}{{ submission.code }}" />
+{% endblock alternate_link %}
+
+{% block agenda_custom_header %}
+<script id="pretalx-messages" data-logged-in="{% if request.user.is_anonymous %}false{% else %}true{% endif %}" src="{{ request.event.urls.schedule }}widget/messages.js"></script>
+{% endblock agenda_custom_header %}
+
+{% block agenda_content %}
+{% html_signal "eventyay.agenda.signals.html_above_session_pages" sender=request.event request=request submission=submission %}
+<div>
+    <script id="pretalx-schedule-data" type="application/json">{{ schedule_json|safe }}</script>
+    <script type="text/javascript" src="{{ request.event.urls.schedule_widget_script }}" async></script>
+    {% with event_tz=request.event.settings.timezone|default:request.event.timezone %}
+    <pretalx-schedule event-url="{{ request.event.urls.base }}" locale="{{ request.LANGUAGE_CODE }}" view="talk" talk-code="{{ submission.code }}" {% if request.event.is_video_creation %}join-room-base-url="{{ request.event.urls.video_base }}rooms/"{% endif %} style="--pretalx-clr-primary: {{ request.event.visible_primary_color }}"></pretalx-schedule>
+    {% endwith %}
+    <noscript>
+        <h1>{{ submission.title|event_localize }}</h1>
+        <p>{{ submission_description|event_localize }}</p>
+    </noscript>
+</div>
+{% html_signal "eventyay.agenda.signals.html_below_session_pages" sender=request.event request=request submission=submission %}
+{% endblock agenda_content %}

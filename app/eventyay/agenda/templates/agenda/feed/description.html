@@ -1,0 +1,16 @@
+{% load i18n %}
+
+{% load presale_locale %}
+<p>
+    {% if obj.changes.action == "update" %}
+        {% blocktranslate trimmed with event_name=obj.event.name|event_localize %}
+            A new {{ event_name }} schedule has been released!
+        {% endblocktranslate %}
+    {% else %}
+        {% blocktranslate trimmed with event_name=obj.event.name|event_localize %}
+            The first {{ event_name }} schedule has been released!
+        {% endblocktranslate %}
+    {% endif %}
+</p>
+
+{% include "agenda/changelog_block.html" with schedule=obj %}

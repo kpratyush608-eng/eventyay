@@ -1,0 +1,54 @@
+{% extends "cfp/event/base.html" %}
+{% load html_signal %}
+{% load i18n %}
+
+{% block title %}{% translate "Your Profile" %} :: {% endblock title %}
+
+{% block cfp_header %}
+    {% include "cfp/includes/forms_header.html" %}
+{% endblock cfp_header %}
+
+{% block content %}
+    {% html_signal "eventyay.cfp.signals.html_above_profile_page" sender=request.event request=request %}
+
+    <h2>{% translate "Your Profile" %}</h2>
+    <p>
+        {% translate "This data will be displayed publicly if your proposal is accepted. It is also visible to reviewers." %}
+    </p>
+    <form method="post" enctype="multipart/form-data" class="speaker-profile-form">
+        {% csrf_token %}
+        {% include "common/forms/errors.html" with form=profile_form %}
+
+        {{ profile_form.fullname.as_field_group }}
+        {% if profile_form.biography %}
+            {{ profile_form.biography.as_field_group }}
+        {% endif %}
+        {% if request.event.cfp.request_avatar %}
+            {% include "common/avatar.html" with user=request.user form=profile_form %}
+        {% endif %}
+        {% if profile_form.avatar_source %}{{ profile_form.avatar_source.as_field_group }}{% endif %}
+        {% if profile_form.avatar_license %}{{ profile_form.avatar_license.as_field_group }}{% endif %}
+        {% if profile_form.availabilities %}
+            {% include "common/availabilities.html" %}
+            {{ profile_form.availabilities.as_field_group }}
+        {% endif %}
+        {% if profile_question_fields %}
+            <h2>{% translate "We have some questions" %}</h2>
+            {% for field in profile_question_fields %}
+                {{ field.as_field_group }}
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-4 flip ml-auto">
+                <input type="hidden" name="form" value="profile">
+                <button type="submit" class="btn btn-block btn-success btn-lg">
+                    {{ phrases.base.save }}
+                </button>
+            </div>
+        </div>
+    </form>
+
+    {% html_signal "eventyay.common.signals.profile_bottom_html" sender=request.event user=user %}
+
+{% endblock content %}

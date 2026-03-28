@@ -1,0 +1,138 @@
+{% load i18n %}
+{% load eventurl %}
+{% load oauth_tags %}
+{% load static %}
+
+<div id="ajaxerr">
+</div>
+<div id="loadingmodal">
+    <div class="modal-card">
+        <div class="modal-card-icon">
+            <i class="fa fa-cog big-rotating-icon" aria-hidden="true"></i>
+        </div>
+        <div class="modal-card-content">
+            <h3></h3>
+            <p class="text"></p>
+            <p class="status">{% translate 'If the process continues for an extended period, feel free to reach out to us.' %}</p>
+        </div>
+    </div>
+</div>
+<div id="join-video-popupmodal" hidden aria-live="polite">
+    <div class="modal-card join-online-video">
+        <div class="modal-card-content-join">
+            <div>
+                <h3>
+                    {% translate "This is a ticketed event. If you ordered a ticket as a guest user, you don't have an account but can still access the ticket using the secret link in your ticket confirmation email. On the tickets page there is also a link to join online sessions." %}
+                </h3>
+                <h3>
+                    {% translate 'As a ticket holder please also check your email for the unique link to join online sessions.' %}
+                </h3>
+                {% if request.event %}
+                    <p class="text">
+                        {% translate "Can't find your ticket?" %}
+                        <a class="btn btn-link" href='{% eventurl request.event "presale:event.resend_link" %}'>
+                            {% translate 'Resend the email' %}
+                        </a>
+                        {% translate 'to receive it.' %}
+                    </p>
+                    <p class="text">
+                        {% translate 'Want to order a ticket?' %}
+                        <a class="btn btn-link" href='{% eventurl request.event "presale:event.index" %}'>
+                            {% translate 'Get a ticket here' %}
+                        </a>
+                    </p>
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <p class="text">
+                        {% blocktrans with event_name=event_name %}
+                            Want to create a {{ event_name }} account?
+                        {% endblocktrans %}
+                        <a class="btn btn-link" href='{% url "eventyay_common:auth.register" %}?next={{ request.get_full_path|urlencode }}'>
+                            {% translate 'Sign up here' %}
+                        </a>
+                    </p>
+                    <p class="text">
+                        {% blocktrans with event_name=event_name %}
+                            Already have a {{ event_name }} account?
+                        {% endblocktrans %}
+                        <a class="btn btn-link" href='{% url "eventyay_common:auth.login" %}?next={{ request.get_full_path|urlencode }}'>
+                            {% translate 'Login here' %}
+                        </a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="join-online-close">
+            <button id="join-online-close-button" class="btn btn-default join-online-close-button">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Login Popup Modal -->
+<div id="checkout-login-modal"
+    class="checkout-login-overlay"
+    style="display: none;"
+    data-msg-logging-in="{% translate 'Logging in...' %}"
+    data-msg-invalid-credentials="{% translate 'Invalid email or password. Please try again.' %}"
+    data-msg-server-error="{% translate 'Server error. Please try again later.' %}"
+    data-msg-login-failed="{% translate 'Login failed. Please try again.' %}"
+    data-msg-connection-failed="{% translate 'Connection failed. Please check your network and try again.' %}"
+    data-msg-popup-blocked="{% translate 'Please allow popups for this site to use SSO login.' %}">    
+    <div class="checkout-login-popup" role="dialog" aria-modal="true" aria-labelledby="checkout-login-modal-title">
+        <div class="checkout-login-header">
+            <h3 id="checkout-login-modal-title">{% translate "Login" %}</h3>
+            <button type="button" class="checkout-login-close" aria-label="{% translate 'Close' %}">&times;</button>
+        </div>
+        <div class="checkout-login-body">
+            <p class="checkout-login-message">{% translate "Please log in to continue." %}</p>
+
+            <!-- Login Form -->
+            <form id="checkout-login-form" method="post" action="{% url 'eventyay_common:auth.login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" id="checkout-next-url" value="">
+
+                <div class="form-group">
+                    <label for="checkout-email">{% translate "Email" %}</label>
+                    <input type="email" id="checkout-email" name="email" class="form-control" required autocomplete="email" placeholder="{% translate 'Enter your email' %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-password">{% translate "Password" %}</label>
+                    <input type="password" id="checkout-password" name="password" class="form-control" required autocomplete="current-password" placeholder="{% translate 'Enter your password' %}">
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="keep_logged_in" value="1"> {% translate "Keep me logged in" %}
+                    </label>
+                </div>
+
+                <div id="checkout-login-error" class="alert alert-danger" style="display: none;"></div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-block" id="checkout-login-submit">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i> {% translate "Log in" %}
+                </button>
+            </form>
+
+            <div class="checkout-login-divider">
+                <span>{% translate "or" %}</span>
+            </div>
+
+            <!-- SSO Provider Buttons -->
+            <div class="checkout-login-sso">
+                <a href="/oauth_login/mediawiki/" class="btn btn-default btn-block checkout-sso-btn" rel="noopener noreferrer" data-provider="mediawiki">
+                    {% translate "Login with MediaWiki" %}
+                </a>
+                <a href="/oauth_login/google/" class="btn btn-default btn-block checkout-sso-btn" rel="noopener noreferrer" data-provider="google">
+                    {% translate "Login with Google" %}
+                </a>
+            </div>
+
+            <div class="checkout-login-footer">
+                <p>{% translate "Don't have an account?" %} <a href="{% url 'eventyay_common:auth.register' %}">{% translate "Create one" %}</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "pretixpresale/fragment_join_online_video.html" %}

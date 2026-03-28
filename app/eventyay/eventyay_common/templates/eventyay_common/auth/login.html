@@ -1,0 +1,17 @@
+{% extends "eventyay_common/auth/base.html" %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static %}
+{% load urlreplace %}
+{% load append_next_url %}
+{% block content %}
+    <form class="form-signin" action="" method="post">
+        {% if preferred_provider %}
+            {% include 'eventyay_common/auth/_login_options.html' %}
+            {% include 'eventyay_common/auth/_login_form.html' %}
+        {% else %}
+            {% include 'eventyay_common/auth/_login_form.html' %}
+            {% include 'eventyay_common/auth/_login_options.html' %}
+        {% endif %}
+    </form>
+{% endblock %}
